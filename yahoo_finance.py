@@ -6,6 +6,7 @@ import json
 import argparse
 from collections import OrderedDict
 from time import sleep
+
 def parse(ticker):
 	url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
 	response = requests.get(url)
