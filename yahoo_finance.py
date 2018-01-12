@@ -9,7 +9,7 @@ from time import sleep
 
 def parse(ticker):
 	url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
-	response = requests.get(url)
+	response = requests.get(url, verify=False)
 	print "Parsing %s"%(url)
 	sleep(4)
 	parser = html.fromstring(response.text)
