@@ -9,7 +9,7 @@ from time import sleep
 
 def parse(ticker):
 	url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
-	response = requests.get(url, verify=False)
+	response = requests.get(url)
 	print "Parsing %s"%(url)
 	sleep(4)
 	parser = html.fromstring(response.text)
@@ -27,7 +27,7 @@ def parse(ticker):
 			datelist.append(i['fmt'])
 		earnings_date = ' to '.join(datelist)
 		for table_data in summary_table:
-			raw_table_key = table_data.xpath('.//td[@class="C(black)"]//text()')
+			raw_table_key = table_data.xpath('.//td[contains(@class,"C(black)")]//text()')
 			raw_table_value = table_data.xpath('.//td[contains(@class,"Ta(end)")]//text()')
 			table_key = ''.join(raw_table_key).strip()
 			table_value = ''.join(raw_table_value).strip()
