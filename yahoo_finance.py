@@ -1,6 +1,5 @@
 from lxml import html  
 import requests
-from exceptions import ValueError
 from time import sleep
 import json
 import argparse
@@ -9,8 +8,8 @@ from time import sleep
 
 def parse(ticker):
 	url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
-	response = requests.get(url)
-	print "Parsing %s"%(url)
+	response = requests.get(url, verify=False)
+	print ("Parsing %s"%(url))
 	sleep(4)
 	parser = html.fromstring(response.text)
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
@@ -34,8 +33,8 @@ def parse(ticker):
 			summary_data.update({table_key:table_value})
 		summary_data.update({'1y Target Est':y_Target_Est,'EPS (TTM)':eps,'Earnings Date':earnings_date,'ticker':ticker,'url':url})
 		return summary_data
-	except ValueError:
-		print "Failed to parse json response"
+	except:
+		print ("Failed to parse json response")
 		return {"error":"Failed to parse json response"}
 		
 if __name__=="__main__":
@@ -43,8 +42,8 @@ if __name__=="__main__":
 	argparser.add_argument('ticker',help = '')
 	args = argparser.parse_args()
 	ticker = args.ticker
-	print "Fetching data for %s"%(ticker)
+	print ("Fetching data for %s"%(ticker))
 	scraped_data = parse(ticker)
-	print "Writing data to output file"
+	print ("Writing data to output file")
 	with open('%s-summary.json'%(ticker),'w') as fp:
-	 	json.dump(scraped_data,fp,indent = 4)
+		json.dump(scraped_data,fp,indent = 4)
